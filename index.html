@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nor Tools · 在线免费实用工具箱——HTML编辑、网站地图生成、汇率计算、函数计算、各国搜索引擎...</title>
+<style>
+:root {
+    --primary: #3b4cca;
+    --primary-hover: #2a38a8;
+    --primary-light: #e8e8ff;
+    --primary-border: #c5caf0;
+    --border: #e0e0e0;
+    --bg: #f5f6f8;
+    --text: #1a202c;
+    --text-secondary: #4a5568;
+    --muted: #718096;
+    --paper: #ffffff;
+    --radius: 12px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    min-height: 100%;
+    font-family: "Segoe UI", -apple-system, "Microsoft YaHei", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+}
+
+body { display: flex; flex-direction: column; }
+
+/* ==================== 顶部栏 ==================== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 52px;
+    padding: 0 24px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo-text {
+    font-size: 17px;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: -0.2px;
+}
+
+.nav-links { display: flex; gap: 28px; align-items: center; }
+
+.nav-links a {
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--primary);
+    white-space: nowrap;
+    transition: opacity 0.18s;
+}
+
+.nav-links a:hover { opacity: 0.65; }
+
+/* ==================== Hero ==================== */
+.hero {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    padding: 60px 24px 56px;
+    text-align: center;
+}
+
+.hero-eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding: 5px 14px;
+    background: var(--primary-light);
+    border-radius: 20px;
+}
+
+.hero-title {
+    font-size: 42px;
+    font-weight: 900;
+    color: var(--text);
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 20px;
+}
+
+.hero-title .accent {
+    color: var(--primary);
+}
+
+.hero-subtitle {
+    font-size: 16px;
+    line-height: 1.75;
+    color: var(--muted);
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+/* ==================== 工具卡片网格 ==================== */
+.tools-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px 24px 72px;
+    width: 100%;
+}
+
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.tool-card {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.tool-card:hover {
+    border-color: var(--primary-border);
+    box-shadow: 0 12px 40px rgba(59, 76, 202, 0.15);
+    transform: translateY(-6px);
+}
+
+.tool-card:active {
+    transform: translateY(-2px);
+}
+
+/* 图标 */
+.tool-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    background: var(--primary-light);
+    box-shadow: 0 4px 16px rgba(59, 76, 202, 0.08);
+}
+
+/* 名称 */
+.tool-name {
+    font-size: 19px;
+    font-weight: 900;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+/* 英文名 */
+.tool-en {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+/* 描述 */
+.tool-desc {
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+    flex: 1;
+}
+
+/* 特性列表 */
+.tool-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 20px;
+}
+
+.tool-features li {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    padding-left: 18px;
+    position: relative;
+}
+
+.tool-features li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: var(--primary);
+    font-weight: 900;
+    font-size: 12px;
+}
+
+/* 链接按钮 */
+.tool-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 18px;
+    background: var(--primary-light);
+    color: var(--primary);
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    transition: all 0.15s;
+    border: 1px solid var(--primary-border);
+}
+
+.tool-card:hover .tool-link {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.tool-link .arrow {
+    font-size: 14px;
+    transition: transform 0.15s;
+}
+
+.tool-card:hover .tool-link .arrow {
+    transform: translateX(3px);
+}
+
+/* 每个工具的图标配色微调 */
+.tool-icon-search  { background: #e6f0fa; color: #3b4cca; }
+.tool-icon-calc    { background: #e8f7ee; color: #2f855a; }
+.tool-icon-sitemap { background: #fff3e0; color: #c05621; }
+.tool-icon-editor  { background: #f3e5fa; color: #6b46c1; }
+
+/* ==================== Footer ==================== */
+.footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.9;
+    background: #ffffff;
+}
+
+.footer a {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 1024px) {
+    .tools-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 16px;
+        height: 46px;
+    }
+    .logo-text { font-size: 15px; }
+    .nav-links { gap: 18px; }
+    .nav-links a { font-size: 12.5px; }
+
+    .hero {
+        padding: 40px 16px 40px;
+    }
+
+    .hero-title { font-size: 30px; letter-spacing: -0.5px; }
+
+    .hero-subtitle { font-size: 14px; }
+
+    .tools-container {
+        padding: 32px 16px 48px;
+    }
+
+    .tools-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .tool-card {
+        padding: 22px 18px 18px;
+    }
+
+    .tool-icon {
+        width: 54px;
+        height: 54px;
+        font-size: 28px;
+        border-radius: 14px;
+        margin-bottom: 14px;
+    }
+
+    .tool-name { font-size: 17px; }
+
+    .tool-desc { font-size: 13px; margin-bottom: 16px; }
+
+    .footer {
+        padding: 24px 16px;
+        font-size: 11px;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- 顶栏 -->
+<header class="navbar">
+    <span class="logo-text">Nor Tools</span>
+    <nav class="nav-links">
+        <a href="https://tools.nor.asia/a">关于</a>
+        <a href="https://about.nor.asia/more">更多</a>
+        <a href="https://nor.asia">主页</a>
+    </nav>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-eyebrow">Nor Tools · 2026</div>
+    <h1 class="hero-title">四种工具，<span class="accent">一站直达</span>。</h1>
+    <p class="hero-subtitle">
+        站内搜索、计算器、网站地图生成器、HTML 编辑器——<br>
+        完全免费。
+    </p>
+</section>
+
+<!-- 工具卡片 -->
+<main class="tools-container">
+    <div class="tools-grid">
+
+        <!-- 搜索 -->
+        <a href="https://tools.nor.asia/s" class="tool-card">
+            <div class="tool-icon tool-icon-search">🔍</div>
+            <div class="tool-name">站内聚合搜索</div>
+            <div class="tool-en">Search</div>
+            <p class="tool-desc">
+                输入关键词，在 DuckDuckGo、Wikipedia、Stack Overflow、GitHub、Hacker News 之间自由切换，搜索结果直接在当前页面内展示。
+            </p>
+            <ul class="tool-features">
+                <li>5 大引擎，一键切换</li>
+                <li>结果不跳转，站内阅读</li>
+                <li>键盘上下键快速切换</li>
+            </ul>
+            <span class="tool-link">开始搜索 <span class="arrow">→</span></span>
+        </a>
+
+        <!-- 计算器 -->
+        <a href="https://tools.nor.asia/m" class="tool-card">
+            <div class="tool-icon tool-icon-calc">🧮</div>
+            <div class="tool-name">万能计算器</div>
+            <div class="tool-en">Calculator</div>
+            <p class="tool-desc">
+                科学计算 + 函数绘图 + 货币换算，三合一。支持三角函数、对数、幂运算，可输入含 x 的表达式自动绘制曲线，实时换算 15 种货币。
+            </p>
+            <ul class="tool-features">
+                <li>科学计算器 + 函数绘图</li>
+                <li>15 种常用货币实时换算</li>
+                <li>历史记录自动保存</li>
+            </ul>
+            <span class="tool-link">打开计算器 <span class="arrow">→</span></span>
+        </a>
+
+        <!-- 网站地图 -->
+        <a href="https://tools.nor.asia/w" class="tool-card">
+            <div class="tool-icon tool-icon-sitemap">🗺️</div>
+            <div class="tool-name">网站地图生成器</div>
+            <div class="tool-en">Sitemap Generator</div>
+            <p class="tool-desc">
+                输入任意网站地址，自动抓取页面中的链接，生成标准 sitemap.xml 文件。支持同域名过滤、外部链接识别、一键复制或下载。
+            </p>
+            <ul class="tool-features">
+                <li>抓取页面内所有链接</li>
+                <li>生成标准 XML sitemap</li>
+                <li>一键复制 / 下载</li>
+            </ul>
+            <span class="tool-link">生成网站地图 <span class="arrow">→</span></span>
+        </a>
+
+        <!-- HTML 编辑器 -->
+        <a href="https://tools.nor.asia/h" class="tool-card">
+            <div class="tool-icon tool-icon-editor">📝</div>
+            <div class="tool-name">HTML 编辑器</div>
+            <div class="tool-en">HTML Editor</div>
+            <p class="tool-desc">
+                源码与可视化双模式编辑，实时预览 HTML / CSS / JavaScript 效果。支持插入图片、表格、文本框，格式化代码，一键保存。
+            </p>
+            <ul class="tool-features">
+                <li>源码 + 可视化双模式</li>
+                <li>实时预览，所见即所得</li>
+                <li>代码格式化与压缩</li>
+            </ul>
+            <span class="tool-link">开始编辑 <span class="arrow">→</span></span>
+        </a>
+
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    © NorStudio 2026 · Nor Tools 工具集 &nbsp;·&nbsp; 所有功能均在浏览器本地运行，不上传服务器
+</footer>
+
+</body>
+</html>
