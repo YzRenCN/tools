@@ -1,0 +1,1763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nor Tools · HTML Editor</title>
+<style>
+:root {
+    --primary: #3b4cca;
+    --primary-hover: #2a38a8;
+    --primary-light: #e8e8ff;
+    --primary-border: #c5caf0;
+    --border: #e0e0e0;
+    --border-light: #f0f0f0;
+    --bg: #f5f6f8;
+    --text: #1a202c;
+    --text-secondary: #4a5568;
+    --muted: #718096;
+    --paper: #ffffff;
+    --hover: #f0f0f5;
+    --radius: 5px;
+    --gap: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    font-family: "Segoe UI", -apple-system, "Microsoft YaHei", Roboto, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ==================== 顶部导航栏 ==================== */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 52px;
+    padding: 0 24px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.logo-text {
+    font-size: 17px;
+    font-weight: 900;
+    color: var(--primary);
+    letter-spacing: -0.2px;
+    white-space: nowrap;
+}
+
+.nav-links {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--primary);
+    white-space: nowrap;
+    transition: opacity 0.18s;
+}
+
+.nav-links a:hover { opacity: 0.65; }
+
+/* ==================== 主工具栏 ==================== */
+.simple-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 0 16px;
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    height: 42px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* 模式切换（最左） */
+.mode-switch {
+    display: flex;
+    align-items: center;
+    background: #f5f5f8;
+    border-radius: var(--radius);
+    padding: 3px;
+    flex-shrink: 0;
+    margin-right: 12px;
+}
+
+.mode-btn {
+    padding: 5px 14px;
+    background: transparent;
+    border: none;
+    border-radius: 3px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+
+.mode-btn:hover { color: var(--primary); }
+
+.mode-btn.active {
+    background: #ffffff;
+    color: var(--primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* 工具栏分隔线 */
+.tool-sep {
+    width: 1px;
+    height: 20px;
+    background: var(--border);
+    margin: 0 8px;
+    flex-shrink: 0;
+}
+
+/* 工具按钮 */
+.tool-link {
+    height: 30px;
+    padding: 0 12px;
+    background: transparent;
+    border: none;
+    border-radius: var(--radius);
+    font-family: inherit;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.12s;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+}
+
+.tool-link:hover {
+    color: var(--primary);
+    background: var(--hover);
+}
+
+.tool-link:active {
+    background: var(--primary-light);
+}
+
+.tool-link strong { font-weight: 700; }
+
+.tool-link .kbd {
+    font-size: 9.5px;
+    color: #b0b8c4;
+    margin-left: 2px;
+    padding: 1px 4px;
+    background: #f4f4f8;
+    border-radius: 3px;
+    font-weight: 500;
+}
+
+/* 右侧状态 */
+.tool-status {
+    margin-left: auto;
+    padding: 0 4px;
+    font-size: 11.5px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2f855a;
+    transition: background 0.2s;
+}
+
+.dot.saving { background: #d69e2e; }
+
+/* ==================== 可视化工具栏 ==================== */
+.visual-toolbar {
+    display: none;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2px;
+    padding: 8px 16px;
+    background: #fafbfd;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    min-height: 46px;
+    row-gap: 6px;
+}
+
+.visual-toolbar.active { display: flex; }
+
+.vtb-btn {
+    height: 28px;
+    min-width: 28px;
+    padding: 0 9px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.12s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.vtb-btn:hover {
+    background: #ffffff;
+    border-color: var(--border);
+    color: var(--text);
+}
+
+.vtb-btn:active {
+    background: var(--primary-light);
+    border-color: var(--primary-border);
+}
+
+.vtb-select {
+    height: 28px;
+    padding: 0 6px;
+    font-family: inherit;
+    font-size: 11.5px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: #ffffff;
+    color: var(--text);
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.15s;
+}
+
+.vtb-select:hover,
+.vtb-select:focus {
+    border-color: var(--primary-border);
+}
+
+.vtb-color {
+    width: 28px;
+    height: 28px;
+    padding: 3px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: #ffffff;
+    transition: border-color 0.15s;
+}
+
+.vtb-color:hover {
+    border-color: var(--primary-border);
+}
+
+.vtb-sep {
+    width: 1px;
+    height: 18px;
+    background: var(--border);
+    margin: 0 5px;
+    flex-shrink: 0;
+}
+
+/* ==================== 主内容区 ==================== */
+.main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.pane {
+    flex: 0 0 60%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: #ffffff;
+}
+
+/* 面板头部 */
+.pane-header {
+    height: 30px;
+    padding: 0 16px;
+    background: #fafbfd;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10.5px;
+    color: var(--muted);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+
+.pane-header .pane-meta {
+    font-weight: 500;
+    color: #b0b8c4;
+    letter-spacing: 0;
+    text-transform: none;
+    font-size: 10.5px;
+}
+
+/* 源码编辑器 */
+.code-editor {
+    flex: 1;
+    width: 100%;
+    padding: 20px 24px;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: "Consolas", "Monaco", "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text);
+    background: #ffffff;
+    tab-size: 2;
+    word-wrap: break-word;
+    white-space: pre;
+    overflow: auto;
+    display: block;
+}
+
+.code-editor.hidden { display: none; }
+
+.code-editor::placeholder {
+    color: #c8d0da;
+}
+
+.code-editor::-webkit-scrollbar,
+.visual-editor::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.code-editor::-webkit-scrollbar-track,
+.visual-editor::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.code-editor::-webkit-scrollbar-thumb,
+.visual-editor::-webkit-scrollbar-thumb {
+    background: #d8dde5;
+    border-radius: 5px;
+    border: 2px solid #ffffff;
+}
+
+.code-editor::-webkit-scrollbar-thumb:hover,
+.visual-editor::-webkit-scrollbar-thumb:hover {
+    background: #b0b8c4;
+}
+
+/* 可视化编辑器 */
+.visual-editor {
+    flex: 1;
+    width: 100%;
+    padding: 40px 60px 60px;
+    border: none;
+    outline: none;
+    overflow: auto;
+    background: #ffffff;
+    font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--text);
+    display: none;
+    max-width: 900px;
+    margin: 0 auto;
+    box-sizing: content-box;
+}
+
+.visual-editor.active { display: block; }
+
+.visual-editor h1 { font-size: 32px; font-weight: 800; margin: 28px 0 14px; line-height: 1.3; letter-spacing: -0.5px; }
+.visual-editor h2 { font-size: 25px; font-weight: 700; margin: 24px 0 12px; line-height: 1.3; letter-spacing: -0.3px; }
+.visual-editor h3 { font-size: 20px; font-weight: 700; margin: 20px 0 10px; line-height: 1.35; }
+.visual-editor p { margin: 10px 0; }
+.visual-editor ul, .visual-editor ol { padding-left: 30px; margin: 10px 0; }
+.visual-editor li { margin: 5px 0; }
+.visual-editor img { max-width: 100%; border-radius: 6px; margin: 12px 0; }
+.visual-editor table { border-collapse: collapse; width: 100%; margin: 14px 0; }
+.visual-editor table td,
+.visual-editor table th { border: 1px solid #ddd; padding: 10px 12px; }
+.visual-editor hr { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+.visual-editor a { color: var(--primary); text-decoration: underline; }
+.visual-editor blockquote {
+    border-left: 4px solid var(--primary-border);
+    padding: 8px 18px;
+    margin: 12px 0;
+    color: var(--text-secondary);
+    background: #f8f8fc;
+    border-radius: 0 4px 4px 0;
+}
+.visual-editor pre {
+    background: #f4f4f8;
+    padding: 14px 18px;
+    border-radius: 6px;
+    font-family: "Consolas", monospace;
+    font-size: 13px;
+    overflow-x: auto;
+    margin: 12px 0;
+    line-height: 1.6;
+}
+.visual-editor code {
+    background: #f4f4f8;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-family: "Consolas", monospace;
+    font-size: 13px;
+}
+
+.visual-editor:focus {
+    outline: none;
+}
+
+/* 文本框 */
+.visual-editor .tb-wrap {
+    position: relative;
+    min-width: 120px;
+    min-height: 40px;
+    padding: 10px 14px;
+    border: 1px dashed rgba(59, 76, 202, 0.3);
+    box-sizing: border-box;
+    margin: 10px 0;
+    background: #ffffff;
+    cursor: move;
+    user-select: none;
+    border-radius: 4px;
+}
+
+.visual-editor .tb-wrap.selected {
+    border: 2px solid var(--primary);
+    padding: 9px 13px;
+    z-index: 3;
+}
+
+.visual-editor .tb-inner {
+    width: 100%;
+    min-height: 22px;
+    outline: none;
+    cursor: move;
+    font-family: "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.visual-editor .tb-wrap.selected .tb-inner {
+    cursor: text;
+}
+
+.visual-editor .tb-resizer {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--primary);
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    bottom: -6px;
+    right: -6px;
+    cursor: nwse-resize;
+    display: none;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    z-index: 10;
+    touch-action: none;
+}
+
+.visual-editor .tb-wrap.selected .tb-resizer {
+    display: block;
+}
+
+/* 右侧预览 */
+.preview-pane {
+    flex: 0 0 40%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-left: 1px solid var(--border);
+}
+
+.preview-frame {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: #ffffff;
+}
+
+/* 分栏拖拽条 */
+.resizer {
+    width: 8px;
+    background: #f0f2f5;
+    cursor: col-resize;
+    flex-shrink: 0;
+    transition: background 0.15s;
+    position: relative;
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+}
+
+.resizer:hover { background: var(--primary-light); }
+
+.resizer::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 2px;
+    height: 28px;
+    background: #c8d0da;
+    border-radius: 1px;
+    transition: background 0.15s;
+}
+
+.resizer:hover::after {
+    background: var(--primary);
+}
+
+/* ==================== 底部状态栏 ==================== */
+.status-bar {
+    height: 30px;
+    padding: 0 24px;
+    background: #ffffff;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--muted);
+    flex-shrink: 0;
+    gap: 12px;
+    font-family: "Consolas", monospace;
+}
+
+.status-bar span { white-space: nowrap; }
+.status-bar .status-right { display: flex; gap: 16px; }
+
+/* ==================== 响应式 ==================== */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 16px;
+        height: 46px;
+    }
+    .logo-text { font-size: 15px; }
+    .nav-links { gap: 18px; }
+    .nav-links a { font-size: 12.5px; }
+
+    .simple-toolbar {
+        padding: 0 10px;
+        height: 40px;
+    }
+
+    .mode-switch {
+        margin-right: 8px;
+    }
+
+    .mode-btn {
+        padding: 4px 10px;
+        font-size: 11px;
+    }
+
+    .tool-link {
+        height: 28px;
+        padding: 0 8px;
+        font-size: 11.5px;
+    }
+
+    .tool-link .kbd { display: none; }
+
+    .tool-sep { margin: 0 4px; }
+
+    .visual-toolbar {
+        padding: 6px 10px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        min-height: 42px;
+    }
+
+    .vtb-btn {
+        height: 26px;
+        font-size: 11px;
+        flex-shrink: 0;
+    }
+
+    .vtb-select {
+        height: 26px;
+        font-size: 10.5px;
+        flex-shrink: 0;
+    }
+
+    .vtb-color {
+        width: 26px;
+        height: 26px;
+    }
+
+    .main { flex-direction: column; }
+
+    .pane {
+        flex: 1;
+        min-height: 0;
+    }
+
+    .resizer {
+        width: 100%;
+        height: 8px;
+        cursor: row-resize;
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .resizer::after {
+        width: 28px;
+        height: 2px;
+    }
+
+    .preview-pane {
+        flex: 1;
+        border-left: none;
+        min-height: 0;
+    }
+
+    .code-editor {
+        padding: 16px;
+        font-size: 12px;
+    }
+
+    .visual-editor {
+        padding: 20px 18px;
+        font-size: 14px;
+        max-width: none;
+        box-sizing: border-box;
+    }
+
+    .pane-header {
+        height: 28px;
+        padding: 0 12px;
+        font-size: 10px;
+    }
+
+    .status-bar {
+        padding: 0 16px;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-links { gap: 14px; }
+    .nav-links a { font-size: 12px; }
+    .tool-link { font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 顶部导航栏 -->
+<header class="navbar">
+    <span class="logo-text">Nor Tools</span>
+    <nav class="nav-links">
+        <a href="https://tools.nor.asia/a">关于</a>
+        <a href="https://about.nor.asia/more">更多</a>
+        <a href="https://nor.asia">返回</a>
+        <a href="https://nor.asia">主页</a>
+    </nav>
+</header>
+
+<!-- 主工具栏 -->
+<div class="simple-toolbar" id="toolbar">
+    <div class="mode-switch">
+        <button class="mode-btn active" data-mode="code" title="源码编辑模式">源码</button>
+        <button class="mode-btn" data-mode="visual" title="可视化编辑模式">可视化</button>
+    </div>
+
+    <span class="tool-sep"></span>
+
+    <button class="tool-link" data-act="new" title="新建空白文档">
+        <strong>新建</strong><span class="kbd">Ctrl+N</span>
+    </button>
+    <button class="tool-link" data-act="open" title="打开本地 HTML 文件">
+        <strong>打开</strong>
+    </button>
+    <button class="tool-link" data-act="save" title="保存为 HTML 文件">
+        <strong>保存</strong><span class="kbd">Ctrl+S</span>
+    </button>
+
+    <span class="tool-sep"></span>
+
+    <button class="tool-link" data-act="format" title="格式化整理代码">格式化</button>
+    <button class="tool-link" data-act="minify" title="压缩为一整行">压缩</button>
+    <button class="tool-link" data-act="template" title="插入常用 HTML 模板">模板</button>
+    <button class="tool-link" data-act="run" title="在预览区刷新重跑">
+        <strong>运行</strong><span class="kbd">Ctrl+↵</span>
+    </button>
+
+    <div class="tool-status">
+        <span class="dot" id="statusDot"></span>
+        <span id="statusText">就绪</span>
+    </div>
+</div>
+
+<!-- 可视化工具栏 -->
+<div class="visual-toolbar" id="visualToolbar">
+    <!-- 基础格式 -->
+    <button class="vtb-btn" data-cmd="bold" title="加粗 (Ctrl+B)"><b>B</b></button>
+    <button class="vtb-btn" data-cmd="italic" title="斜体 (Ctrl+I)"><i>I</i></button>
+    <button class="vtb-btn" data-cmd="underline" title="下划线 (Ctrl+U)"><u>U</u></button>
+    <button class="vtb-btn" data-cmd="strikeThrough" title="删除线"><s>S</s></button>
+
+    <span class="vtb-sep"></span>
+
+    <!-- 段落与字号 -->
+    <select class="vtb-select" id="formatBlock" title="段落格式">
+        <option value="p">正文</option>
+        <option value="h1">标题 1</option>
+        <option value="h2">标题 2</option>
+        <option value="h3">标题 3</option>
+        <option value="blockquote">引用</option>
+        <option value="pre">代码块</option>
+    </select>
+    <select class="vtb-select" id="fontSize" title="字号">
+        <option value="2">小</option>
+        <option value="3" selected>标准</option>
+        <option value="4">大</option>
+        <option value="5">特大</option>
+        <option value="6">超大</option>
+    </select>
+
+    <span class="vtb-sep"></span>
+
+    <!-- 颜色 -->
+    <input type="color" class="vtb-color" id="vTextColor" value="#1a202c" title="文字颜色">
+    <input type="color" class="vtb-color" id="vBgColor" value="#fff3a3" title="背景高亮">
+
+    <span class="vtb-sep"></span>
+
+    <!-- 对齐 -->
+    <button class="vtb-btn" data-cmd="justifyLeft" title="左对齐">⬅</button>
+    <button class="vtb-btn" data-cmd="justifyCenter" title="居中">⬍</button>
+    <button class="vtb-btn" data-cmd="justifyRight" title="右对齐">➡</button>
+
+    <span class="vtb-sep"></span>
+
+    <!-- 列表 -->
+    <button class="vtb-btn" data-cmd="insertUnorderedList" title="无序列表">• 列表</button>
+    <button class="vtb-btn" data-cmd="insertOrderedList" title="有序列表">1. 列表</button>
+
+    <span class="vtb-sep"></span>
+
+    <!-- 插入 -->
+    <button class="vtb-btn" data-act="link" title="插入链接">🔗</button>
+    <button class="vtb-btn" data-act="image" title="插入图片">🖼</button>
+    <button class="vtb-btn" data-act="textbox" title="插入文本框">▭ 文本框</button>
+    <button class="vtb-btn" data-act="table" title="插入表格">▦</button>
+    <button class="vtb-btn" data-act="hr" title="插入水平线">—</button>
+
+    <span class="vtb-sep"></span>
+
+    <!-- 其他 -->
+    <button class="vtb-btn" data-cmd="removeFormat" title="清除格式">清除</button>
+    <button class="vtb-btn" data-cmd="undo" title="撤销 (Ctrl+Z)">↶</button>
+    <button class="vtb-btn" data-cmd="redo" title="重做 (Ctrl+Y)">↷</button>
+</div>
+
+<!-- 主内容区 -->
+<div class="main" id="main">
+
+    <div class="pane" id="editorPane">
+        <div class="pane-header">
+            <span id="paneTitle">HTML 源码</span>
+            <span class="pane-meta" id="codeMeta">0 行 · 0 字符</span>
+        </div>
+
+        <textarea
+            class="code-editor"
+            id="codeEditor"
+            placeholder="在此输入 HTML 代码，右侧实时预览…"
+            spellcheck="false"
+            wrap="off"
+        ></textarea>
+
+        <div
+            class="visual-editor"
+            id="visualEditor"
+            contenteditable="true"
+            data-placeholder="在此输入内容，可直接编辑，右侧实时预览…"
+        ></div>
+    </div>
+
+    <div class="resizer" id="resizer"></div>
+
+    <div class="preview-pane" id="previewPane">
+        <div class="pane-header">
+            <span>实时预览</span>
+            <span class="pane-meta" id="previewMeta">自动刷新</span>
+        </div>
+        <iframe class="preview-frame" id="previewFrame" sandbox="allow-scripts allow-forms allow-modals allow-popups allow-same-origin"></iframe>
+    </div>
+
+</div>
+
+<!-- 底部状态栏 -->
+<div class="status-bar">
+    <span>
+        <span id="lineInfo">Ln 1, Col 1</span>
+        ·
+        <span id="fileInfo">未命名文档</span>
+        ·
+        <span id="modeInfo">源码模式</span>
+    </span>
+    <div class="status-right">
+        <span>纯本地 · 不上传</span>
+    </div>
+</div>
+
+<input type="file" id="fileInput" accept=".html,.htm,.txt" style="display: none;">
+<input type="file" id="imageInput" accept="image/*" style="display: none;">
+
+<script>
+(function() {
+    'use strict';
+
+    var STORAGE_KEY = 'nor_tools_html_content';
+    var STORAGE_NAME = 'nor_tools_html_filename';
+    var STORAGE_MODE = 'nor_tools_html_mode';
+
+    var codeEditor = document.getElementById('codeEditor');
+    var visualEditor = document.getElementById('visualEditor');
+    var previewFrame = document.getElementById('previewFrame');
+    var statusText = document.getElementById('statusText');
+    var statusDot = document.getElementById('statusDot');
+    var codeMeta = document.getElementById('codeMeta');
+    var lineInfo = document.getElementById('lineInfo');
+    var fileInfo = document.getElementById('fileInfo');
+    var modeInfo = document.getElementById('modeInfo');
+    var paneTitle = document.getElementById('paneTitle');
+    var fileInput = document.getElementById('fileInput');
+    var imageInput = document.getElementById('imageInput');
+    var resizer = document.getElementById('resizer');
+    var main = document.getElementById('main');
+    var editorPane = document.getElementById('editorPane');
+    var previewPane = document.getElementById('previewPane');
+    var modeBtns = document.querySelectorAll('.mode-btn');
+    var visualToolbar = document.getElementById('visualToolbar');
+
+    var currentFileName = 'untitled.html';
+    var currentMode = 'code';
+    var saveTimer = null;
+    var renderTimer = null;
+    var savedVisualRange = null;
+    var textboxCounter = 0;
+
+    var DEFAULT_HTML = [
+        '<!DOCTYPE html>',
+        '<html lang="zh-CN">',
+        '<head>',
+        '<meta charset="UTF-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+        '<title>我的页面</title>',
+        '<style>',
+        '  body {',
+        '    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;',
+        '    max-width: 800px;',
+        '    margin: 60px auto;',
+        '    padding: 0 24px;',
+        '    line-height: 1.8;',
+        '    color: #1a202c;',
+        '  }',
+        '  h1 {',
+        '    color: #3b4cca;',
+        '    font-size: 32px;',
+        '    margin-bottom: 16px;',
+        '  }',
+        '</style>',
+        '</head>',
+        '<body>',
+        '<h1>Hello, World!</h1>',
+        '<p>这是一段示例内容，直接在左侧编辑，右侧会实时显示效果。</p>',
+        '<p>支持完整的 HTML / CSS / JavaScript，例如：</p>',
+        '<button onclick="alert(\'你好！\')">点我试试</button>',
+        '</body>',
+        '</html>'
+    ].join('\n');
+
+    function extractBodyContent(html) {
+        if (!html) return '';
+        var bodyMatch = html.match(/<body[^>]*>([\s\S]*)<\/body>/i);
+        if (bodyMatch) return bodyMatch[1];
+        return html;
+    }
+
+    function extractStyleContent(html) {
+        var styles = [];
+        var re = /<style[^>]*>([\s\S]*?)<\/style>/gi;
+        var match;
+        while ((match = re.exec(html)) !== null) {
+            styles.push(match[1]);
+        }
+        return styles.join('\n');
+    }
+
+    function replaceBodyContent(fullHtml, newBody) {
+        if (/<body[^>]*>[\s\S]*<\/body>/i.test(fullHtml)) {
+            return fullHtml.replace(/(<body[^>]*>)[\s\S]*(<\/body>)/i, '$1' + newBody + '$2');
+        }
+        var headMatch = fullHtml.match(/<head[^>]*>[\s\S]*?<\/head>/i);
+        var headPart = headMatch ? headMatch[0] : '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n<meta charset="UTF-8">\n</head>';
+        return headPart + '\n<body>\n' + newBody + '\n</body>\n</html>';
+    }
+
+    function switchMode(mode) {
+        if (mode === currentMode) return;
+
+        if (mode === 'visual') {
+            var bodyContent = extractBodyContent(codeEditor.value);
+            visualEditor.innerHTML = bodyContent;
+            applyStylesToVisual();
+            codeEditor.classList.add('hidden');
+            codeEditor.classList.remove('active');
+            visualEditor.classList.add('active');
+            visualToolbar.classList.add('active');
+            bindAllTextBoxes();
+        } else {
+            var newBody = visualEditor.innerHTML;
+            cleanVisualState();
+            codeEditor.value = replaceBodyContent(codeEditor.value, newBody);
+            visualEditor.classList.remove('active');
+            visualToolbar.classList.remove('active');
+            codeEditor.classList.remove('hidden');
+        }
+
+        currentMode = mode;
+
+        modeBtns.forEach(function(btn) {
+            btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
+        });
+
+        paneTitle.textContent = mode === 'code' ? 'HTML 源码' : '可视化编辑';
+        modeInfo.textContent = mode === 'code' ? '源码模式' : '可视化模式';
+
+        updateMeta();
+        renderPreview();
+        try { localStorage.setItem(STORAGE_MODE, mode); } catch (e) {}
+
+        if (mode === 'code') {
+            codeEditor.focus();
+        } else {
+            visualEditor.focus();
+        }
+    }
+
+    function cleanVisualState() {
+        visualEditor.querySelectorAll('.tb-wrap.selected').forEach(function(w) {
+            w.classList.remove('selected');
+        });
+        visualEditor.querySelectorAll('.tb-resizer').forEach(function(r) {
+            r.remove();
+        });
+    }
+
+    function applyStylesToVisual() {
+        var oldStyle = document.getElementById('visual-inline-style');
+        if (oldStyle) oldStyle.remove();
+
+        var styleContent = extractStyleContent(codeEditor.value);
+        if (styleContent) {
+            var styleEl = document.createElement('style');
+            styleEl.id = 'visual-inline-style';
+            styleEl.textContent = styleContent;
+            document.head.appendChild(styleEl);
+        }
+    }
+
+    function init() {
+        var saved = null;
+        var savedName = null;
+        var savedMode = null;
+        try {
+            saved = localStorage.getItem(STORAGE_KEY);
+            savedName = localStorage.getItem(STORAGE_NAME);
+            savedMode = localStorage.getItem(STORAGE_MODE);
+        } catch (e) {}
+
+        if (saved) {
+            codeEditor.value = saved;
+        } else {
+            codeEditor.value = DEFAULT_HTML;
+        }
+        if (savedName) {
+            currentFileName = savedName;
+            fileInfo.textContent = savedName;
+        }
+
+        updateMeta();
+        renderPreview();
+
+        if (savedMode === 'visual') {
+            switchMode('visual');
+        }
+    }
+
+    function updateMeta() {
+        if (currentMode === 'code') {
+            var value = codeEditor.value;
+            var chars = value.length;
+            var lines = value.split('\n').length;
+            codeMeta.textContent = lines + ' 行 · ' + chars + ' 字符';
+        } else {
+            var text = visualEditor.innerText || '';
+            var chars2 = text.replace(/\s/g, '').length;
+            codeMeta.textContent = chars2 + ' 字';
+        }
+    }
+
+    function updateCursorInfo() {
+        if (currentMode !== 'code') return;
+        var pos = codeEditor.selectionStart;
+        var before = codeEditor.value.slice(0, pos);
+        var lines = before.split('\n');
+        var line = lines.length;
+        var col = lines[lines.length - 1].length + 1;
+        lineInfo.textContent = 'Ln ' + line + ', Col ' + col;
+    }
+
+    function renderPreview() {
+        var html;
+        if (currentMode === 'code') {
+            html = codeEditor.value;
+        } else {
+            var clone = visualEditor.cloneNode(true);
+            clone.querySelectorAll('.tb-wrap.selected').forEach(function(w) {
+                w.classList.remove('selected');
+            });
+            clone.querySelectorAll('.tb-resizer').forEach(function(r) {
+                r.remove();
+            });
+            clone.querySelectorAll('.tb-wrap').forEach(function(w) {
+                w.style.border = 'none';
+                w.style.padding = '10px 14px';
+            });
+            var newBody = clone.innerHTML;
+            html = replaceBodyContent(codeEditor.value, newBody);
+        }
+        previewFrame.srcdoc = html;
+    }
+
+    function autoSave() {
+        clearTimeout(saveTimer);
+        statusText.textContent = '编辑中…';
+        statusDot.classList.add('saving');
+
+        saveTimer = setTimeout(function() {
+            try {
+                if (currentMode === 'visual') {
+                    var clone = visualEditor.cloneNode(true);
+                    clone.querySelectorAll('.tb-wrap.selected').forEach(function(w) {
+                        w.classList.remove('selected');
+                    });
+                    clone.querySelectorAll('.tb-resizer').forEach(function(r) {
+                        r.remove();
+                    });
+                    clone.querySelectorAll('.tb-wrap').forEach(function(w) {
+                        w.style.border = 'none';
+                        w.style.padding = '10px 14px';
+                    });
+                    codeEditor.value = replaceBodyContent(codeEditor.value, clone.innerHTML);
+                }
+                localStorage.setItem(STORAGE_KEY, codeEditor.value);
+                statusText.textContent = '已保存 ' + new Date().toTimeString().slice(0, 5);
+                statusDot.classList.remove('saving');
+            } catch (e) {
+                statusText.textContent = '保存失败';
+            }
+        }, 500);
+    }
+
+    function scheduleRender() {
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(function() {
+            renderPreview();
+        }, 300);
+    }
+
+    codeEditor.addEventListener('input', function() {
+        updateMeta();
+        autoSave();
+        scheduleRender();
+        if (currentMode === 'visual') {
+            applyStylesToVisual();
+        }
+    });
+
+    codeEditor.addEventListener('click', updateCursorInfo);
+    codeEditor.addEventListener('keyup', updateCursorInfo);
+    codeEditor.addEventListener('select', updateCursorInfo);
+
+    codeEditor.addEventListener('keydown', function(e) {
+        if (e.key === 'Tab') {
+            e.preventDefault();
+            var start = this.selectionStart;
+            var end = this.selectionEnd;
+            if (start === end) {
+                this.value = this.value.slice(0, start) + '  ' + this.value.slice(end);
+                this.selectionStart = this.selectionEnd = start + 2;
+            } else {
+                var selected = this.value.slice(start, end);
+                var indented = selected.split('\n').map(function(line) {
+                    return '  ' + line;
+                }).join('\n');
+                this.value = this.value.slice(0, start) + indented + this.value.slice(end);
+                this.selectionStart = start;
+                this.selectionEnd = start + indented.length;
+            }
+            updateMeta();
+            autoSave();
+            scheduleRender();
+        }
+
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            renderPreview();
+            statusText.textContent = '已刷新预览';
+            statusDot.classList.remove('saving');
+        }
+
+        if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+            e.preventDefault();
+            doSave();
+        }
+
+        if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+            e.preventDefault();
+            doNew();
+        }
+
+        if ((e.ctrlKey || e.metaKey) && e.key === ']') {
+            e.preventDefault();
+            var pos = this.selectionStart;
+            this.value = this.value.slice(0, pos) + '  ' + this.value.slice(pos);
+            this.selectionStart = this.selectionEnd = pos + 2;
+            autoSave();
+            scheduleRender();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === '[') {
+            e.preventDefault();
+            var pos2 = this.selectionStart;
+            if (this.value.slice(pos2 - 2, pos2) === '  ') {
+                this.value = this.value.slice(0, pos2 - 2) + this.value.slice(pos2);
+                this.selectionStart = this.selectionEnd = pos2 - 2;
+                autoSave();
+                scheduleRender();
+            }
+        }
+    });
+
+    visualEditor.addEventListener('input', function() {
+        updateMeta();
+        autoSave();
+        scheduleRender();
+    });
+
+    visualEditor.addEventListener('paste', function(e) {
+        e.preventDefault();
+        var text = (e.clipboardData || window.clipboardData).getData('text/plain');
+        document.execCommand('insertText', false, text);
+    });
+
+    function saveVisualSelection() {
+        var sel = window.getSelection();
+        if (sel.rangeCount > 0) {
+            try { savedVisualRange = sel.getRangeAt(0).cloneRange(); } catch (e) {}
+        }
+    }
+
+    function restoreVisualSelection() {
+        if (!savedVisualRange) return false;
+        try {
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(savedVisualRange);
+            return true;
+        } catch (e) { return false; }
+    }
+
+    visualToolbar.querySelectorAll('button, select, input').forEach(function(el) {
+        el.addEventListener('mousedown', saveVisualSelection);
+        el.addEventListener('touchstart', saveVisualSelection, { passive: true });
+    });
+
+    function vExec(cmd, value) {
+        restoreVisualSelection();
+        visualEditor.focus();
+        document.execCommand(cmd, false, value || null);
+        autoSave();
+        scheduleRender();
+    }
+
+    visualToolbar.querySelectorAll('button[data-cmd]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            vExec(this.getAttribute('data-cmd'));
+        });
+    });
+
+    document.getElementById('formatBlock').addEventListener('change', function() {
+        vExec('formatBlock', this.value);
+    });
+
+    document.getElementById('fontSize').addEventListener('change', function() {
+        vExec('fontSize', this.value);
+    });
+
+    document.getElementById('vTextColor').addEventListener('input', function() {
+        vExec('foreColor', this.value);
+    });
+
+    document.getElementById('vBgColor').addEventListener('input', function() {
+        vExec('hiliteColor', this.value);
+    });
+
+    visualToolbar.querySelectorAll('button[data-act]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var act = this.getAttribute('data-act');
+            if (act === 'link') {
+                restoreVisualSelection();
+                var url = prompt('请输入链接地址：', 'https://');
+                if (url) vExec('createLink', url);
+            } else if (act === 'image') {
+                imageInput.click();
+            } else if (act === 'textbox') {
+                insertTextBox();
+            } else if (act === 'table') {
+                insertTable();
+            } else if (act === 'hr') {
+                vExec('insertHTML', '<hr><p><br></p>');
+            }
+        });
+    });
+
+    imageInput.addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            restoreVisualSelection();
+            visualEditor.focus();
+            document.execCommand('insertHTML', false, '<img src="' + ev.target.result + '" alt="图片">');
+            autoSave();
+            scheduleRender();
+        };
+        reader.readAsDataURL(file);
+        imageInput.value = '';
+    });
+
+    function insertTextBox() {
+        textboxCounter++;
+        var offset = (textboxCounter % 5) * 10;
+
+        var wrap = document.createElement('div');
+        wrap.className = 'tb-wrap';
+        wrap.setAttribute('contenteditable', 'false');
+        wrap.style.marginLeft = offset + 'px';
+        wrap.style.width = '320px';
+
+        var inner = document.createElement('div');
+        inner.className = 'tb-inner';
+        inner.setAttribute('contenteditable', 'true');
+        inner.textContent = '双击编辑文本框…';
+
+        var resizerEl = document.createElement('div');
+        resizerEl.className = 'tb-resizer';
+
+        wrap.appendChild(inner);
+        wrap.appendChild(resizerEl);
+
+        restoreVisualSelection();
+        var sel = window.getSelection();
+        if (sel.rangeCount) {
+            var range = sel.getRangeAt(0);
+            range.collapse(false);
+            range.insertNode(wrap);
+            var p = document.createElement('p');
+            p.innerHTML = '<br>';
+            wrap.parentNode.insertBefore(p, wrap.nextSibling);
+            var nr = document.createRange();
+            nr.setStart(p, 0);
+            nr.collapse(true);
+            sel.removeAllRanges();
+            sel.addRange(nr);
+        } else {
+            visualEditor.appendChild(wrap);
+        }
+
+        bindTextBoxEvents(wrap);
+        selectTextBox(wrap);
+
+        autoSave();
+        scheduleRender();
+        statusText.textContent = '已插入文本框';
+        statusDot.classList.remove('saving');
+    }
+
+    function bindAllTextBoxes() {
+        visualEditor.querySelectorAll('.tb-wrap').forEach(function(wrap) {
+            if (wrap._bound) return;
+            if (!wrap.querySelector('.tb-resizer')) {
+                var r = document.createElement('div');
+                r.className = 'tb-resizer';
+                wrap.appendChild(r);
+            }
+            bindTextBoxEvents(wrap);
+        });
+    }
+
+    function bindTextBoxEvents(wrap) {
+        if (wrap._bound) return;
+        wrap._bound = true;
+
+        var inner = wrap.querySelector('.tb-inner');
+        var resizerEl = wrap.querySelector('.tb-resizer');
+        if (!inner || !resizerEl) return;
+
+        wrap.addEventListener('mousedown', function(e) {
+            if (e.target === resizerEl) return;
+            if (wrap.classList.contains('selected') && document.activeElement === inner) return;
+            e.preventDefault();
+            e.stopPropagation();
+            selectTextBox(wrap);
+            startTextBoxDrag(e, wrap);
+        });
+
+        function startResize(e) {
+            if (e.target !== resizerEl) return;
+            e.preventDefault();
+            e.stopPropagation();
+            startTextBoxResize(e, wrap);
+        }
+
+        resizerEl.addEventListener('mousedown', startResize);
+        resizerEl.addEventListener('touchstart', startResize, { passive: false });
+
+        wrap.addEventListener('dblclick', function(e) {
+            if (e.target === resizerEl) return;
+            e.preventDefault();
+            e.stopPropagation();
+            selectTextBox(wrap);
+            inner.focus();
+            var range = document.createRange();
+            range.selectNodeContents(inner);
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+        });
+
+        inner.addEventListener('input', function() {
+            autoSave();
+            scheduleRender();
+            updateMeta();
+        });
+    }
+
+    function selectTextBox(wrap) {
+        visualEditor.querySelectorAll('.tb-wrap.selected').forEach(function(w) {
+            w.classList.remove('selected');
+        });
+        wrap.classList.add('selected');
+    }
+
+    function startTextBoxDrag(e, wrap) {
+        var point = e.touches ? e.touches[0] : e;
+        var startX = point.clientX;
+        var startML = parseInt(wrap.style.marginLeft) || 0;
+        var moved = false;
+
+        function onMove(ev) {
+            var p = ev.touches ? ev.touches[0] : ev;
+            var dx = p.clientX - startX;
+            if (Math.abs(dx) > 2) moved = true;
+            wrap.style.marginLeft = Math.max(0, startML + dx) + 'px';
+        }
+
+        function onUp() {
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+            document.removeEventListener('touchmove', onMove);
+            document.removeEventListener('touchend', onUp);
+            if (moved) {
+                autoSave();
+                scheduleRender();
+            }
+        }
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('touchend', onUp);
+    }
+
+    function startTextBoxResize(e, wrap) {
+        var point = e.touches ? e.touches[0] : e;
+        var startX = point.clientX;
+        var startW = wrap.offsetWidth;
+
+        function onMove(ev) {
+            var p = ev.touches ? ev.touches[0] : ev;
+            var dx = p.clientX - startX;
+            var newW = Math.max(120, startW + dx);
+            wrap.style.width = newW + 'px';
+        }
+
+        function onUp() {
+            document.removeEventListener('mousemove', onMove);
+            document.removeEventListener('mouseup', onUp);
+            document.removeEventListener('touchmove', onMove);
+            document.removeEventListener('touchend', onUp);
+            autoSave();
+            scheduleRender();
+        }
+
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+        document.addEventListener('touchmove', onMove, { passive: false });
+        document.addEventListener('touchend', onUp);
+    }
+
+    function insertTable() {
+        var rows = parseInt(prompt('表格行数：', '3'), 10);
+        var cols = parseInt(prompt('表格列数：', '3'), 10);
+        if (!rows || !cols || rows < 1 || cols < 1) return;
+
+        var html = '<table>';
+        for (var i = 0; i < rows; i++) {
+            html += '<tr>';
+            for (var j = 0; j < cols; j++) {
+                html += '<td><br></td>';
+            }
+            html += '</tr>';
+        }
+        html += '</table><p><br></p>';
+
+        vExec('insertHTML', html);
+    }
+
+    visualEditor.addEventListener('click', function(e) {
+        var wrap = e.target.closest ? e.target.closest('.tb-wrap') : null;
+        if (!wrap) {
+            visualEditor.querySelectorAll('.tb-wrap.selected').forEach(function(w) {
+                w.classList.remove('selected');
+            });
+        } else {
+            selectTextBox(wrap);
+        }
+    });
+
+    function doNew() {
+        if (currentMode === 'visual') {
+            var bodyContent = extractBodyContent(codeEditor.value);
+            if (bodyContent.trim() && bodyContent !== extractBodyContent(DEFAULT_HTML)) {
+                if (!confirm('当前内容未保存为文件，确定要新建吗？')) return;
+            }
+        } else {
+            if (codeEditor.value.trim() && codeEditor.value !== DEFAULT_HTML) {
+                if (!confirm('当前内容未保存为文件，确定要新建吗？')) return;
+            }
+        }
+
+        codeEditor.value = DEFAULT_HTML;
+        currentFileName = 'untitled.html';
+        fileInfo.textContent = currentFileName;
+
+        if (currentMode === 'visual') {
+            visualEditor.innerHTML = extractBodyContent(DEFAULT_HTML);
+            applyStylesToVisual();
+            bindAllTextBoxes();
+        }
+
+        updateMeta();
+        autoSave();
+        renderPreview();
+        statusText.textContent = '已新建';
+        statusDot.classList.remove('saving');
+    }
+
+    function doOpen() {
+        fileInput.click();
+    }
+
+    fileInput.addEventListener('change', function(e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev) {
+            codeEditor.value = ev.target.result;
+            currentFileName = file.name;
+            fileInfo.textContent = file.name;
+
+            if (currentMode === 'visual') {
+                visualEditor.innerHTML = extractBodyContent(codeEditor.value);
+                applyStylesToVisual();
+                bindAllTextBoxes();
+            }
+
+            updateMeta();
+            autoSave();
+            renderPreview();
+            statusText.textContent = '已打开 ' + file.name;
+            statusDot.classList.remove('saving');
+        };
+        reader.readAsText(file, 'utf-8');
+        fileInput.value = '';
+    });
+
+    function doSave() {
+        if (currentMode === 'visual') {
+            cleanVisualState();
+            var clone = visualEditor.cloneNode(true);
+            clone.querySelectorAll('.tb-resizer').forEach(function(r) { r.remove(); });
+            clone.querySelectorAll('.tb-wrap').forEach(function(w) {
+                w.style.border = 'none';
+                w.style.padding = '10px 14px';
+            });
+            codeEditor.value = replaceBodyContent(codeEditor.value, clone.innerHTML);
+        }
+
+        var html = codeEditor.value;
+        var blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = currentFileName || 'untitled.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        try {
+            localStorage.setItem(STORAGE_KEY, html);
+            localStorage.setItem(STORAGE_NAME, currentFileName);
+        } catch (e) {}
+
+        statusText.textContent = '✓ 已保存';
+        statusDot.classList.remove('saving');
+    }
+
+    function doFormat() {
+        var html = codeEditor.value;
+        var tokens = html.replace(/>\s*</g, '>\n<').split('\n');
+        var indent = 0;
+        var result = [];
+        var inlineTags = ['a','b','i','u','s','em','strong','span','code','small','big','sub','sup','font'];
+
+        tokens.forEach(function(token) {
+            var t = token.trim();
+            if (!t) return;
+
+            var isClosing = /^<\//.test(t);
+            var isSelfClosing = /\/>$/.test(t) || /^<(br|hr|img|input|meta|link)[\s>]/i.test(t);
+            var tagMatch = t.match(/^<\/?([a-zA-Z][a-zA-Z0-9]*)/);
+            var tagName = tagMatch ? tagMatch[1].toLowerCase() : '';
+            var isInline = inlineTags.indexOf(tagName) !== -1;
+
+            if (isClosing && !isInline) {
+                indent = Math.max(0, indent - 1);
+            }
+
+            result.push('  '.repeat(indent) + t);
+
+            if (!isClosing && !isSelfClosing && !isInline && tagMatch) {
+                indent++;
+            }
+        });
+
+        codeEditor.value = result.join('\n');
+        updateMeta();
+        autoSave();
+        renderPreview();
+        statusText.textContent = '✓ 已格式化';
+        statusDot.classList.remove('saving');
+    }
+
+    function doMinify() {
+        var html = codeEditor.value;
+        var minified = html
+            .replace(/>\s+</g, '><')
+            .replace(/\n\s*/g, '')
+            .replace(/\s{2,}/g, ' ')
+            .trim();
+        codeEditor.value = minified;
+        updateMeta();
+        autoSave();
+        renderPreview();
+        statusText.textContent = '✓ 已压缩';
+        statusDot.classList.remove('saving');
+    }
+
+    function doTemplate() {
+        var choice = prompt(
+            '选择要插入的模板（输入编号）：\n\n' +
+            '1 = 空白 HTML 结构\n' +
+            '2 = 居中卡片\n' +
+            '3 = 响应式导航栏\n' +
+            '4 = 简单按钮动画',
+            '1'
+        );
+        if (!choice) return;
+        var tpl = '';
+        if (choice === '1') {
+            tpl = '<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n<meta charset="UTF-8">\n<title>页面</title>\n</head>\n<body>\n\n</body>\n</html>';
+        } else if (choice === '2') {
+            tpl = '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="UTF-8">\n<style>\n  body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #f0f2f5; font-family: sans-serif; }\n  .card { background: #fff; padding: 40px; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); max-width: 400px; }\n  h1 { margin: 0 0 12px; color: #3b4cca; }\n</style>\n</head>\n<body>\n<div class="card">\n  <h1>卡片标题</h1>\n  <p>卡片内容</p>\n</div>\n</body>\n</html>';
+        } else if (choice === '3') {
+            tpl = '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="UTF-8">\n<style>\n  body { margin: 0; font-family: sans-serif; }\n  nav { display: flex; justify-content: space-between; align-items: center; padding: 12px 24px; background: #3b4cca; color: #fff; }\n  nav .logo { font-weight: 700; font-size: 18px; }\n  nav ul { display: flex; gap: 20px; list-style: none; margin: 0; padding: 0; }\n  nav a { color: #fff; text-decoration: none; }\n</style>\n</head>\n<body>\n<nav>\n  <div class="logo">Logo</div>\n  <ul>\n    <li><a href="#">首页</a></li>\n    <li><a href="#">关于</a></li>\n    <li><a href="#">联系</a></li>\n  </ul>\n</nav>\n</body>\n</html>';
+        } else if (choice === '4') {
+            tpl = '<!DOCTYPE html>\n<html>\n<head>\n<meta charset="UTF-8">\n<style>\n  body { display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background: #1a202c; }\n  button { padding: 16px 32px; border: none; border-radius: 8px; background: #3b4cca; color: #fff; font-size: 16px; cursor: pointer; transition: all 0.3s; }\n  button:hover { background: #2a38a8; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(59,76,202,0.4); }\n</style>\n</head>\n<body>\n<button>点我</button>\n</body>\n</html>';
+        }
+        if (tpl) {
+            codeEditor.value = tpl;
+            if (currentMode === 'visual') {
+                visualEditor.innerHTML = extractBodyContent(tpl);
+                applyStylesToVisual();
+                bindAllTextBoxes();
+            }
+            updateMeta();
+            autoSave();
+            renderPreview();
+            statusText.textContent = '已应用模板';
+            statusDot.classList.remove('saving');
+        }
+    }
+
+    modeBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            switchMode(this.getAttribute('data-mode'));
+        });
+    });
+
+    document.querySelectorAll('.tool-link').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var act = this.getAttribute('data-act');
+            switch (act) {
+                case 'new': doNew(); break;
+                case 'open': doOpen(); break;
+                case 'save': doSave(); break;
+                case 'format': doFormat(); break;
+                case 'minify': doMinify(); break;
+                case 'template': doTemplate(); break;
+                case 'run': renderPreview(); statusText.textContent = '已刷新'; break;
+            }
+        });
+    });
+
+    var isDragging = false;
+
+    resizer.addEventListener('mousedown', function(e) {
+        isDragging = true;
+        document.body.style.cursor = 'col-resize';
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        var rect = main.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        var totalW = rect.width;
+        var minW = 200;
+        var maxW = totalW - 200;
+        x = Math.max(minW, Math.min(maxW, x));
+        var percent = (x / totalW) * 100;
+        editorPane.style.flex = '0 0 ' + percent + '%';
+        previewPane.style.flex = '0 0 ' + (100 - percent - (8 / totalW * 100)) + '%';
+    });
+
+    document.addEventListener('mouseup', function() {
+        if (isDragging) {
+            isDragging = false;
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+        }
+    });
+
+    resizer.addEventListener('touchstart', function(e) {
+        isDragging = true;
+        e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener('touchmove', function(e) {
+        if (!isDragging) return;
+        var touch = e.touches[0];
+        var rect = main.getBoundingClientRect();
+        var x = touch.clientX - rect.left;
+        var totalW = rect.width;
+        var minW = 150;
+        var maxW = totalW - 150;
+        x = Math.max(minW, Math.min(maxW, x));
+        var percent = (x / totalW) * 100;
+        editorPane.style.flex = '0 0 ' + percent + '%';
+        previewPane.style.flex = '0 0 ' + (100 - percent - (8 / totalW * 100)) + '%';
+    }, { passive: false });
+
+    document.addEventListener('touchend', function() {
+        isDragging = false;
+    });
+
+    window.addEventListener('beforeunload', function() {
+        try {
+            if (currentMode === 'visual') {
+                var clone = visualEditor.cloneNode(true);
+                clone.querySelectorAll('.tb-wrap.selected').forEach(function(w) {
+                    w.classList.remove('selected');
+                });
+                clone.querySelectorAll('.tb-resizer').forEach(function(r) { r.remove(); });
+                clone.querySelectorAll('.tb-wrap').forEach(function(w) {
+                    w.style.border = 'none';
+                    w.style.padding = '10px 14px';
+                });
+                codeEditor.value = replaceBodyContent(codeEditor.value, clone.innerHTML);
+            }
+            if (codeEditor.value) {
+                localStorage.setItem(STORAGE_KEY, codeEditor.value);
+                localStorage.setItem(STORAGE_NAME, currentFileName);
+                localStorage.setItem(STORAGE_MODE, currentMode);
+            }
+        } catch (e) {}
+    });
+
+    init();
+    if (currentMode === 'code') {
+        codeEditor.focus();
+    }
+
+})();
+</script>
+</body>
+</html>
