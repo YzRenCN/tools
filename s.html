@@ -3,7 +3,25 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nor Tools · 国内外搜索引擎聚合器</title>
+<title>聚合搜索引擎 · DuckDuckGo/Wikipedia/GitHub 多引擎一站搜索 - Nor Tools</title>
+<meta name="description" content="免费聚合搜索工具，在 DuckDuckGo、Wikipedia、Stack Overflow、GitHub、Hacker News 五个引擎之间一键切换，搜索结果站内展示，点击即可查看详情并跳转原文。纯浏览器本地运行，无需注册。">
+<meta name="keywords" content="聚合搜索,多引擎搜索,站内搜索,DuckDuckGo搜索,Wiki搜索,GitHub搜索,StackOverflow搜索,HackerNews搜索">
+<link rel="canonical" href="https://tools.nor.asia/s">
+<meta name="robots" content="index, follow, max-image-preview:large">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nor Tools">
+<meta property="og:title" content="聚合搜索引擎 · DuckDuckGo/Wikipedia/GitHub 多引擎一站搜索">
+<meta property="og:description" content="五个引擎一键切换，搜索结果站内展示，点击查看详情并跳转原文，纯浏览器本地运行。">
+<meta property="og:url" content="https://tools.nor.asia/s">
+<meta property="og:locale" content="zh_CN">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="聚合搜索引擎 · 多引擎一站搜索">
+<meta name="twitter:description" content="DuckDuckGo、Wikipedia、Stack Overflow、GitHub、Hacker News 五引擎聚合搜索，站内查看结果。">
+
 <link rel="icon" type="image/png" href="https://ys-e.ysepan.com/wap/yangrenhyx/Midl9F9jH7C5b99/9c6gA7Kq4jEEDAa8ds3jcgA7FE1ke3/%E6%97%A0%E6%A0%87%E9%A2%982.png">
 <style>
 :root {
@@ -533,17 +551,81 @@ body { display: flex; flex-direction: column; overflow: hidden; }
     .status-bar { padding: 0 16px; font-size: 10px; }
 }
 </style>
+
+<!-- 结构化数据：WebApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Nor Tools 聚合搜索引擎",
+  "url": "https://tools.nor.asia/s",
+  "applicationCategory": "SearchApplication",
+  "operatingSystem": "Any (Web Browser)",
+  "browserRequirements": "Requires JavaScript",
+  "inLanguage": "zh-CN",
+  "description": "免费聚合搜索工具，在 DuckDuckGo、Wikipedia、Stack Overflow、GitHub、Hacker News 五个引擎之间一键切换，搜索结果站内展示，点击查看详情并跳转原文。",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+  "featureList": [
+    "DuckDuckGo 摘要与相关主题搜索",
+    "Wikipedia 中英文词条搜索",
+    "Stack Overflow 技术问答搜索",
+    "GitHub 开源仓库搜索",
+    "Hacker News 科技资讯搜索",
+    "搜索结果站内展示，上下方向键快速切换",
+    "点击结果查看详情并可跳转原文"
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "NorStudio",
+    "url": "https://nor.asia"
+  }
+}
+</script>
+
+<!-- 结构化数据：FAQ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "这个聚合搜索工具支持哪些搜索引擎？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "支持 DuckDuckGo、Wikipedia、Stack Overflow、GitHub、Hacker News 五个引擎，点击顶部引擎标签即可一键切换，无需离开页面。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "搜索结果需要跳转才能查看吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不需要。搜索结果直接在站内左侧列表展示，点击任意结果即可在右侧查看标题、链接、摘要和来源等详情，确认后再点击「打开原网页」跳转。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "搜索结果来自哪里？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "搜索结果来自各引擎的公共 API，在浏览器本地发起请求，不经过本站服务器中转，也不存储任何搜索记录。"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
 <!-- 顶部栏 -->
 <header class="navbar">
     <span class="logo-text">Nor Tools</span>
-    <nav class="nav-links">
-        <a href="https://tools.nor.asia/a">关于</a>
-        <a href="https://about.nor.asia/more">更多</a>
-        <a href="https://tools.nor.asia">返回</a>
-        <a href="https://nor.asia">主页</a>
+    <nav class="nav-links" aria-label="主导航">
+        <a href="https://tools.nor.asia/a" title="关于 Nor Tools 工具集" aria-label="关于 Nor Tools 工具集">关于</a>
+        <a href="https://about.nor.asia/more" title="更多 NorStudio 产品" aria-label="更多 NorStudio 产品">更多</a>
+        <a href="https://tools.nor.asia" title="返回 Nor Tools 工具首页" aria-label="返回 Nor Tools 工具首页">返回</a>
+        <a href="https://nor.asia" title="返回 NorStudio 主页" aria-label="返回 NorStudio 主页">主页</a>
     </nav>
 </header>
 
@@ -556,27 +638,28 @@ body { display: flex; flex-direction: column; overflow: hidden; }
         placeholder="输入关键词，在站内查看搜索结果…"
         autocomplete="off"
         spellcheck="false"
+        aria-label="搜索关键词输入框"
     >
-    <button class="search-btn" id="searchBtn">搜索</button>
+    <button class="search-btn" id="searchBtn" aria-label="执行搜索">搜索</button>
 </div>
 
 <!-- 引擎选择栏 -->
-<div class="engine-bar" id="engineBar">
+<div class="engine-bar" id="engineBar" role="tablist" aria-label="搜索引擎选择">
     <span class="engine-label">引擎：</span>
-    <button class="engine-tab active" data-engine="duckduckgo">
-        <span class="eng-icon eng-duck">D</span>DuckDuckGo
+    <button class="engine-tab active" data-engine="duckduckgo" role="tab" aria-selected="true" aria-label="DuckDuckGo 搜索">
+        <span class="eng-icon eng-duck" aria-hidden="true">D</span>DuckDuckGo
     </button>
-    <button class="engine-tab" data-engine="wikipedia">
-        <span class="eng-icon eng-wiki">W</span>Wikipedia
+    <button class="engine-tab" data-engine="wikipedia" role="tab" aria-selected="false" aria-label="Wikipedia 搜索">
+        <span class="eng-icon eng-wiki" aria-hidden="true">W</span>Wikipedia
     </button>
-    <button class="engine-tab" data-engine="stackoverflow">
-        <span class="eng-icon eng-so">SO</span>Stack Overflow
+    <button class="engine-tab" data-engine="stackoverflow" role="tab" aria-selected="false" aria-label="Stack Overflow 搜索">
+        <span class="eng-icon eng-so" aria-hidden="true">SO</span>Stack Overflow
     </button>
-    <button class="engine-tab" data-engine="github">
-        <span class="eng-icon eng-gh">G</span>GitHub
+    <button class="engine-tab" data-engine="github" role="tab" aria-selected="false" aria-label="GitHub 搜索">
+        <span class="eng-icon eng-gh" aria-hidden="true">G</span>GitHub
     </button>
-    <button class="engine-tab" data-engine="news">
-        <span class="eng-icon eng-news">N</span>Hacker News
+    <button class="engine-tab" data-engine="news" role="tab" aria-selected="false" aria-label="Hacker News 搜索">
+        <span class="eng-icon eng-news" aria-hidden="true">N</span>Hacker News
     </button>
 </div>
 
@@ -589,9 +672,9 @@ body { display: flex; flex-direction: column; overflow: hidden; }
             <span>搜索结果</span>
             <span class="pane-meta" id="resultsMeta">—</span>
         </div>
-        <div class="results-list" id="resultsList">
+        <div class="results-list" id="resultsList" aria-live="polite" aria-label="搜索结果列表">
             <div class="empty-state">
-                <span class="big-icon">🔍</span>
+                <span class="big-icon" aria-hidden="true">🔍</span>
                 <div class="big-text">站内聚合搜索</div>
                 <div class="sub-text">
                     输入关键词，选择上方引擎标签，<br>
@@ -607,9 +690,9 @@ body { display: flex; flex-direction: column; overflow: hidden; }
             <span>详情</span>
             <span class="pane-meta" id="previewMeta">—</span>
         </div>
-        <div class="preview-content" id="previewContent">
+        <div class="preview-content" id="previewContent" aria-live="polite" aria-label="搜索结果详情">
             <div class="preview-empty">
-                <span class="big-icon">📄</span>
+                <span class="big-icon" aria-hidden="true">📄</span>
                 点击左侧结果查看详情
             </div>
         </div>
@@ -619,7 +702,7 @@ body { display: flex; flex-direction: column; overflow: hidden; }
 
 <!-- 底部状态栏 -->
 <div class="status-bar">
-    <span id="footerInfo">选择引擎 · 输入关键词 · 回车搜索</span>
+    <span id="footerInfo" aria-live="polite">选择引擎 · 输入关键词 · 回车搜索</span>
     <span>数据来自公共 API</span>
 </div>
 
@@ -1096,7 +1179,9 @@ body { display: flex; flex-direction: column; overflow: hidden; }
             currentEngine = engine;
 
             engineBar.querySelectorAll('.engine-tab').forEach(function(t) {
-                t.classList.toggle('active', t.getAttribute('data-engine') === engine);
+                var isActive = t.getAttribute('data-engine') === engine;
+                t.classList.toggle('active', isActive);
+                t.setAttribute('aria-selected', isActive ? 'true' : 'false');
             });
 
             setStatus('已切换到 ' + (ENGINE_NAMES[engine] || engine));
