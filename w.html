@@ -4,7 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/png" href="https://ys-e.ysepan.com/wap/yangrenhyx/Midl9F9jH7C5b99/9c6gA7Kq4jEEDAa8ds3jcgA7FE1ke3/%E6%97%A0%E6%A0%87%E9%A2%982.png">
-<title>Nor Tools - 完全免费的网站地图生成器</title>
+<title>在线网站地图生成器 · 一键生成 sitemap.xml - Nor Tools</title>
+<meta name="description" content="免费在线网站地图生成器，输入任意网址自动抓取页面链接，生成标准 sitemap.xml 文件。支持同域名过滤、外部链接识别、最大链接数限制，可一键复制或下载 XML。纯浏览器本地运行，无需注册。">
+<meta name="keywords" content="网站地图生成器,sitemap生成,sitemap.xml生成,在线sitemap,网站地图制作,XML网站地图,SEO工具">
+<link rel="canonical" href="https://tools.nor.asia/w">
+<meta name="robots" content="index, follow, max-image-preview:large">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nor Tools">
+<meta property="og:title" content="在线网站地图生成器 · 一键生成 sitemap.xml">
+<meta property="og:description" content="输入网址自动抓取链接，生成标准 sitemap.xml，支持同域名过滤与外部链接识别，一键复制下载。">
+<meta property="og:url" content="https://tools.nor.asia/w">
+<meta property="og:locale" content="zh_CN">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="在线网站地图生成器 · 一键生成 sitemap.xml">
+<meta name="twitter:description" content="输入网址自动抓取链接，生成标准 sitemap.xml，支持复制下载，纯本地运行。">
+
 <style>
 :root {
     --primary: #3b4cca;
@@ -550,38 +568,102 @@ body {
     .status-bar { padding: 0 16px; font-size: 10px; }
 }
 </style>
+
+<!-- 结构化数据：WebApplication -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Nor Tools 在线网站地图生成器",
+  "url": "https://tools.nor.asia/w",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (Web Browser)",
+  "browserRequirements": "Requires JavaScript",
+  "inLanguage": "zh-CN",
+  "description": "免费在线网站地图生成器，输入任意网址自动抓取页面链接，生成标准 sitemap.xml 文件，支持同域名过滤、外部链接识别、最大链接数限制，可一键复制或下载。",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CNY" },
+  "featureList": [
+    "输入网址自动抓取页面内所有链接",
+    "生成标准 sitemap.xml（符合 sitemaps.org 协议）",
+    "支持仅同域名过滤与外部链接识别",
+    "可设置最大抓取链接数",
+    "XML 语法高亮预览",
+    "一键复制或下载 sitemap.xml",
+    "纯浏览器本地运行，不上传数据"
+  ],
+  "publisher": {
+    "@type": "Organization",
+    "name": "NorStudio",
+    "url": "https://nor.asia"
+  }
+}
+</script>
+
+<!-- 结构化数据：FAQ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "这个网站地图生成器怎么用？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "在输入框填入网站地址（如 https://example.com），点击「开始抓取」，工具会自动抓取页面中的链接并生成标准 sitemap.xml，可在右侧预览、复制或下载。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "生成的 sitemap.xml 符合标准吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "符合。生成的 XML 遵循 sitemaps.org 协议，包含 urlset 命名空间、loc、lastmod、changefreq、priority 字段，可直接提交到 Google Search Console 或百度搜索资源平台。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "为什么有些网站抓取失败？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "常见原因是目标网站禁止外部抓取、需要登录才能访问，或公共代理服务暂时不可用。可以稍后重试或改用其他网站地图生成方式。"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
 <!-- 顶部栏 -->
 <header class="navbar">
     <span class="logo-text">Nor Tools</span>
-    <nav class="nav-links">
-        <a href="https://tools.nor.asia/a">关于</a>
-        <a href="https://about.nor.asia/more">更多</a>
-        <a href="https://tools.nor.asia">返回</a>
-        <a href="https://nor.asia">主页</a>
+    <nav class="nav-links" aria-label="主导航">
+        <a href="https://tools.nor.asia/a" title="关于 Nor Tools 工具集" aria-label="关于 Nor Tools 工具集">关于</a>
+        <a href="https://about.nor.asia/more" title="更多 NorStudio 产品" aria-label="更多 NorStudio 产品">更多</a>
+        <a href="https://tools.nor.asia" title="返回 Nor Tools 工具首页" aria-label="返回 Nor Tools 工具首页">返回</a>
+        <a href="https://nor.asia" title="返回 NorStudio 主页" aria-label="返回 NorStudio 主页">主页</a>
     </nav>
 </header>
 
 <!-- 工具栏 -->
 <div class="simple-toolbar">
-    <button class="tool-link primary" id="genBtn" title="生成网站地图">
+    <button class="tool-link primary" id="genBtn" title="生成网站地图" aria-label="生成网站地图">
         <strong>生成网站地图</strong>
     </button>
 
     <span class="tool-sep"></span>
 
-    <button class="tool-link" id="copyBtn" title="复制 XML" disabled>复制 XML</button>
-    <button class="tool-link" id="downloadBtn" title="下载 sitemap.xml" disabled>下载 sitemap.xml</button>
+    <button class="tool-link" id="copyBtn" title="复制 XML" disabled aria-label="复制 XML 到剪贴板">复制 XML</button>
+    <button class="tool-link" id="downloadBtn" title="下载 sitemap.xml" disabled aria-label="下载 sitemap.xml 文件">下载 sitemap.xml</button>
 
     <span class="tool-sep"></span>
 
-    <button class="tool-link" id="clearBtn" title="清空结果">清空</button>
+    <button class="tool-link" id="clearBtn" title="清空结果" aria-label="清空结果">清空</button>
 
     <div class="tool-status">
-        <span class="dot" id="statusDot"></span>
-        <span id="statusText">就绪</span>
+        <span class="dot" id="statusDot" aria-hidden="true"></span>
+        <span id="statusText" aria-live="polite">就绪</span>
     </div>
 </div>
 
@@ -605,8 +687,9 @@ body {
                     placeholder="输入网站地址，例如 https://example.com"
                     value=""
                     spellcheck="false"
+                    aria-label="目标网站地址输入框"
                 >
-                <button class="btn-primary" id="fetchBtn">开始抓取</button>
+                <button class="btn-primary" id="fetchBtn" aria-label="开始抓取网站">开始抓取</button>
             </div>
             <div class="option-row">
                 <label>
@@ -619,15 +702,15 @@ body {
                 </label>
                 <label>
                     最大链接数
-                    <input type="number" id="optMaxLinks" value="200" min="10" max="2000" step="10">
+                    <input type="number" id="optMaxLinks" value="200" min="10" max="2000" step="10" aria-label="最大抓取链接数">
                 </label>
             </div>
         </div>
 
         <!-- 结果区 -->
-        <div class="result-panel" id="resultPanel">
+        <div class="result-panel" id="resultPanel" aria-live="polite" aria-label="抓取到的链接列表">
             <div class="result-empty" id="resultEmpty">
-                <span class="big-icon">🗺️</span>
+                <span class="big-icon" aria-hidden="true">🗺️</span>
                 <div>输入网站地址并点击「开始抓取」</div>
                 <div style="margin-top: 8px; font-size: 11.5px; color: #b0b8c4;">
                     通过公共 API 代理抓取网页，提取链接并生成 sitemap.xml
@@ -638,7 +721,7 @@ body {
     </div>
 
     <!-- 拖拽条 -->
-    <div class="resizer" id="resizer"></div>
+    <div class="resizer" id="resizer" role="separator" aria-label="拖拽调整左右面板宽度"></div>
 
     <!-- 右：XML 预览 -->
     <div class="preview-pane">
@@ -646,15 +729,15 @@ body {
             <span>sitemap.xml 预览</span>
             <span class="pane-meta" id="xmlMeta">—</span>
         </div>
-        <div class="preview-content" id="previewContent"><?xml version="1.0" encoding="UTF-8"?>
-<!-- 生成的网站地图将显示在这里 --></div>
+        <div class="preview-content" id="previewContent" aria-label="sitemap.xml 预览区" aria-live="polite">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!-- 生成的网站地图将显示在这里 --&gt;</div>
     </div>
 
 </div>
 
 <!-- 底部状态栏 -->
 <div class="status-bar">
-    <span id="footerInfo">准备就绪 · 输入网址开始</span>
+    <span id="footerInfo" aria-live="polite">准备就绪 · 输入网址开始</span>
     <span>纯本地 · 不上传</span>
 </div>
 
@@ -796,7 +879,7 @@ body {
 
         if (links.length === 0) {
             resultEmpty.style.display = 'block';
-            resultEmpty.innerHTML = '<span class="big-icon">🤔</span><div>没有抓取到任何链接</div>';
+            resultEmpty.innerHTML = '<span class="big-icon" aria-hidden="true">🤔</span><div>没有抓取到任何链接</div>';
             resultContent.style.display = 'none';
             return;
         }
@@ -942,7 +1025,7 @@ body {
             resultEmpty.style.display = 'block';
             resultContent.style.display = 'none';
             resultEmpty.innerHTML =
-                '<span class="big-icon">⚠️</span>' +
+                '<span class="big-icon" aria-hidden="true">⚠️</span>' +
                 '<div>抓取失败</div>' +
                 '<div style="margin-top: 12px; font-size: 12px; color: #718096; max-width: 500px; line-height: 1.7;">' +
                 escapeHtml(err.message) +
@@ -1019,7 +1102,7 @@ body {
         urlInput.value = '';
         resultEmpty.style.display = 'block';
         resultEmpty.innerHTML =
-            '<span class="big-icon">🗺️</span>' +
+            '<span class="big-icon" aria-hidden="true">🗺️</span>' +
             '<div>输入网站地址并点击「开始抓取」</div>' +
             '<div style="margin-top: 8px; font-size: 11.5px; color: #b0b8c4;">通过公共 API 代理抓取网页，提取链接并生成 sitemap.xml</div>';
         resultContent.style.display = 'none';
